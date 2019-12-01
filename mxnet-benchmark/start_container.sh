@@ -1,35 +1,24 @@
 #!/bin/bash
+CONTAINER_NAME=$1
+CLUSTER_USER=$2
+CONTAINER_REGISTRY=$3
+DATA_PATH=/home/ec2-user/mxnet-data
 
-set -ex
-CONTAINERNAME=$1
-IMAGENAME=$2
-KEYFILE="ssh_cluster_key.pem"
-CLUSTERUSER=cluster
+docker kill $CONTAINER_NAME > /dev/null
+
+docker pull $CONTAINER_REGISTRY
 
 nvidia-docker run \
-    --shm-size=5g \
+    --shm-size=32g \
     --rm \
-    --name $CONTAINERNAME \
+    --name $CONTAINER_NAME \
     --net=host --uts=host --ipc=host \
     --ulimit stack=67108864 --ulimit memlock=-1 \
-    --ulimit nofile=9000:9000 \
+    --ulimit nofile=8192:8192 \
     --security-opt seccomp=unconfined \
+    -v $DATA_PATH:/home/$CLUSTER_USER/mxnet-data \
     -e FI_PROVIDER=\"efa\" \
     --device=/dev/infiniband/uverbs0 \
     --detach \
-    $IMAGENAME
-
-echo "Container started!"
-
-sleep 5
-
-if [ -e $KEYFILE ]; then
-    echo "Removing existing host key $KEYFILE"
-    rm -f $KEYFILE
-fi
-
-echo "Copying SSH private key from container to run tests.."
-docker cp $CONTAINERNAME:/home/$CLUSTERUSER/.ssh/ssh_host_rsa_key $KEYFILE
-
-
-
+    -e NVIDIA_VISIBLE_DEVICES=all \
+    $CONTAINER_REGISTRY

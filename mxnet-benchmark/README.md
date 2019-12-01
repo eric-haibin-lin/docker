@@ -16,7 +16,6 @@ clush --hostfile mpihosts.txt "docker pull 968277166688.dkr.ecr.us-west-2.amazon
 Restart containers on all nodes:
 
 clush --hostfile mpihosts.txt "./start_docker_image_on_node.sh"
-clush --hostfile hosts2 "cd $(PWD); bash ./start_docker_image_on_node.sh"
 
 Run bert phase1 training:
 

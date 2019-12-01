@@ -15,4 +15,3 @@ time /opt/amazon/openmpi/bin/mpirun \
     -H $HOSTLINE \
     -np $NUMPROC \
     /opt/build/nccl-tests/build/all_reduce_perf -b 640M -e 640M -t 1 -f 2 -g 1 -c 1 -n 100  2>&1 | tee --append nccl_test.log
-

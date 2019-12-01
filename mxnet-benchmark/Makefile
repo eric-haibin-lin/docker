@@ -1,28 +1,24 @@
-export USER=cluster
-export CONTAINER_NAME=mxnet-docker
-ECRENDPOINT=968277166688.dkr.ecr.us-west-2.amazonaws.com
-ECRNAME=mxnet-benchmark
-HOSTS=hosts
-PORT=2022
+export USER="cluster"
+export CONTAINER_NAME="mxnet-docker"
+export CONTAINER_REGISTRY="haibinlin/bert-docker:test"
+export KEY_FILE=".ssh_cluster_key.pem"
+export PORT=2022
+export HOSTS=hosts
 
 image: Dockerfile
-	docker build --tag $(ECRNAME):latest .
+	docker build --tag $(CONTAINER_REGISTRY) .
 
-imagepush: image
-	docker tag $(ECRNAME):latest $(ECRENDPOINT)/$(ECRNAME):latest
-	docker push $(ECRENDPOINT)/$(ECRNAME):latest
+push-image: image
+	docker push $(CONTAINER_REGISTRY)
 
-runcontainer:
-	clush --hostfile $(HOSTS) "bash $(PWD)/start_docker_image_on_node.sh $(CONTAINER_NAME) $(USER)"
-	-docker kill $(CONTAINER_NAME)
-	./start_container.sh $(CONTAINER_NAME) haibinlin/bert-docker:test
+launch-container:
+	clush --hostfile $(HOSTS) "bash $(PWD)/start_container.sh $(CONTAINER_NAME) $(USER) $(CONTAINER_REGISTRY)"
 
-sync-host: runcontainer
-	scp -P$(PORT) -i ssh_cluster_key.pem $(HOSTS) $(USER)@localhost:mpihosts.txt
+sync-key: launch-container
+	docker cp $(CONTAINER_NAME):/home/$(USER)/.ssh/ssh_host_rsa_key $(KEY_FILE)
 
-test-nccl: sync-host
-	ssh -p$(PORT) -i ssh_cluster_key.pem $(USER)@localhost /opt/benchmarks/run_benchmark.sh nccl
+sync-host: launch-container
+	scp -P$(PORT) -i $(KEY_FILE) $(HOSTS) $(USER)@localhost:mpihosts.txt
 
-test-bert: hosts2
-	scp -P$(PORT) -i ssh_cluster_key.pem $(HOSTS) $(USER)@localhost:mpihosts.txt
-	ssh -p$(PORT) -i ssh_cluster_key.pem $(USER)@localhost /opt/benchmarks/run_benchmark.sh bert
+run-nccl: sync-host sync-key
+	ssh -p$(PORT) -i $(KEY_FILE) $(USER)@localhost /opt/benchmarks/run_benchmark.sh nccl

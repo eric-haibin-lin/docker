@@ -93,14 +93,8 @@ RUN git clone --recursive -b benchmark https://github.com/eric-haibin-lin/gluon-
     && cd gluon-nlp \
     && python3 setup.py develop
 
-
 # Copy benchmarking scripts
 COPY benchmarks/* /opt/benchmarks/
-COPY benchmarks/bert/* /opt/benchmarks/bert/
-COPY benchmarks/bert/data/* /opt/benchmarks/bert/data/
-COPY benchmarks/bert/conversion_tools/* /opt/benchmarks/bert/conversion_tools/
-COPY benchmarks/bert/model/* /opt/benchmarks/bert/model/
-COPY benchmarks/mnist/* /opt/benchmarks/mnist/
 WORKDIR /opt/benchmarks
 
 # Set environment variables so nvidia-docker will expose GPUs

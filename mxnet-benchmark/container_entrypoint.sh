@@ -1,19 +1,17 @@
 #!/bin/bash
 #
 # This script is called on container startup.
-#
 
-CLUSTERUSER=cluster
+CLUSTER_USER=cluster
 
-echo "Starting container services..."
+echo "starting container services..."
 
 if [ ! -d /run/sshd ]; then
-    echo "Creating /run/sshd"
+    echo "creating /run/sshd"
     mkdir -p /run/sshd
 fi
 
-echo "Starting SSHD."
-/usr/sbin/sshd -f /home/$CLUSTERUSER/.ssh/sshd_config
+echo "starting SSHD."
+/usr/sbin/sshd -f /home/$CLUSTER_USER/.ssh/sshd_config
 
 sleep infinity
-
