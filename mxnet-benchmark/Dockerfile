@@ -72,7 +72,8 @@ RUN apt-get install -y pandoc
 RUN pip3 install --no-cache-dir gpustat
 
 # Install MXNet 
-ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191123-py2.py3-none-manylinux1_x86_64.whl
+# this pip wheel is built based on https://github.com/apache/incubator-mxnet/tree/benchmark COMMIT cc0c356
+ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191129-py2.py3-none-manylinux1_x86_64.whl
 RUN pip3 install $MXNETVERSION
 
 # Install horovod
@@ -82,10 +83,6 @@ RUN HOROVOD_GPU_ALLREDUCE=NCCL \
     HOROVOD_WITHOUT_TENSORFLOW=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITH_MXNET=1 \
     LD_LIBRARY_PATH=/usr/local/cuda/compat \
     pip3 install --no-cache-dir horovod
-
-RUN git clone --recursive -b benchmark https://github.com/eric-haibin-lin/gluon-nlp \
-    && cd gluon-nlp \
-    && python3 setup.py develop
 
 # Copy benchmarking scripts
 COPY benchmarks/* /opt/benchmarks/
