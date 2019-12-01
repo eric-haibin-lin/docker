@@ -92,6 +92,7 @@ WORKDIR /opt/benchmarks
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=430,driver<431"
+ENV PATH /usr/local/cuda/bin:/opt/amazon/openmpi/bin:$PATH
 
 COPY container_entrypoint.sh /etc/
 ENTRYPOINT /etc/container_entrypoint.sh
