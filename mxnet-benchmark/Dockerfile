@@ -67,6 +67,10 @@ RUN git clone https://github.com/NVIDIA/nccl-tests.git && \
     CUDA_HOME=/usr/local/cuda \
     NCCL_HOME=/usr/local
 
+RUN apt-get install -y pandoc
+
+RUN pip3 install --no-cache-dir gpustat
+
 # Install MXNet 
 ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191123-py2.py3-none-manylinux1_x86_64.whl
 RUN pip3 install $MXNETVERSION
@@ -79,16 +83,6 @@ RUN HOROVOD_GPU_ALLREDUCE=NCCL \
     LD_LIBRARY_PATH=/usr/local/cuda/compat \
     pip3 install --no-cache-dir horovod
 
-# Install gluoncv
-RUN pip3 install --no-cache-dir cython pypandoc pandoc
-RUN apt-get install -y pandoc
-#RUN pip3 install --no-cache-dir gluoncv
-RUN git clone --recursive -b pr-rcnn https://github.com/Jerryzcn/gluon-cv.git \
-    && cd gluon-cv \
-    && python3 setup.py install --with-cython
-
-RUN pip3 install --no-cache-dir pycocotools
-RUN pip3 install --no-cache-dir gpustat
 RUN git clone --recursive -b benchmark https://github.com/eric-haibin-lin/gluon-nlp \
     && cd gluon-nlp \
     && python3 setup.py develop
