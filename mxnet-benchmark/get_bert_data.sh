@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export AWS_ACCESS_KEY_ID="ASIAVY7VUBNPH2N5EM2U"
+export AWS_SECRET_ACCESS_KEY="NntJk18E25aJxyKJwsJ7+uNzcRZHI0wa1GU9rq4l"
+export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEIb//////////wEaCXVzLWVhc3QtMSJGMEQCICO0oKimmSIjtIb/IKTkHwZAUpzp53tClstbcxXeImVfAiBOnFmcgT9sXeSBeNvetJE21dj4xsKl/ZSwPVYh6MrLpSrfAQiu//////////8BEAEaDDM5NzI2MjcxOTgzOCIMH5I1T5/c9jEM9VT/KrMBnp94IyTHH7pLBgHWtvOokfaq0AbN2MoDj6napWnk+sEazIzrdYuNwlbWkN0/RKGnOZFgZO/smsLgIXJxJcHjuad+V4jcPCKDsdjfFKFzOt3UAueA8qidsmUkJviBdoVgE2rPN+4i2qt271JZkWYEoXX0u91vy8+K3C3yZLTVteRGd20KxWeAA3iHVMR36mOBxVymEN1JIuxSnvKprABRsFVq6JB7nq4RpciKjPXIxkx4vLAw4o7M7gU65AHfsDXjOikb5RccwwKMR3942ALkXl03LroXljkEUWD85Qb9qginPn98nn+dfiKNRE6V7Mhg+5xbJp8xfBMkdUQHCCPksGnioSZe3xWVFnPXjeuihw9Y9iSta1Gf1kYhLUZ2QF5SxjFW51PGY7v3SQMsjaqWQC047I0LLCUQ0QXo03G/woyhUObCgnNnPzE4fbj3CrpKOnP7VYdklhue3FP9wr+sFJjW+PVoGSj4aSKNe1Sb0XSXsZ52o3vygqVTvWy2y0slrvOkcRBox3BjaIpjaJ649r4lJADBBWChmnCYBUJF1BE="
+
+aws s3 sync s3://bert-pretraining/datasets/enwiki/enwiki-feb-doc-split/ ~/mxnet-data/datasets/enwiki/enwiki-feb-doc-split/
+aws s3 sync s3://bert-pretraining/datasets/book-corpus/book-corpus-large-split/ ~/mxnet-data/datasets/book-corpus/book-corpus-large-split/
+
