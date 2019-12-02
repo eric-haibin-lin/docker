@@ -69,7 +69,7 @@ RUN git clone https://github.com/NVIDIA/nccl-tests.git && \
 
 RUN apt-get install -y pandoc
 
-RUN pip3 install --no-cache-dir gpustat
+RUN pip3 install --no-cache-dir gpustat portalocker torch==1.1.0
 
 # Install MXNet 
 # this pip wheel is built based on https://github.com/apache/incubator-mxnet/tree/benchmark COMMIT cc0c356
