@@ -74,7 +74,7 @@ RUN pip3 install --no-cache-dir gpustat portalocker torch==1.1.0
 # Install MXNet 
 # this pip wheel is built based on https://github.com/apache/incubator-mxnet/tree/benchmark COMMIT cc0c356
 ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191129-py2.py3-none-manylinux1_x86_64.whl
-RUN pip3 install $MXNETVERSION
+RUN pip3 install $MXNETVERSION numpy==1.16
 
 # Install horovod
 RUN HOROVOD_GPU_ALLREDUCE=NCCL \
@@ -83,6 +83,8 @@ RUN HOROVOD_GPU_ALLREDUCE=NCCL \
     HOROVOD_WITHOUT_TENSORFLOW=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITH_MXNET=1 \
     LD_LIBRARY_PATH=/usr/local/cuda/compat \
     pip3 install --no-cache-dir horovod
+
+RUN pip3 install h5py
 
 # Copy benchmarking scripts
 COPY benchmarks/* /opt/benchmarks/
