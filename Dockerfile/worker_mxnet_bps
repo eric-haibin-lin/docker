@@ -126,6 +126,7 @@ RUN pip3 install $FRAMEWORK_VERSION numpy==1.14.6 -U
 ################################ install horovod ################################
 RUN HOROVOD_WITH_MXNET=1 HOROVOD_GPU_ALLREDUCE=NCCL pip3 install horovod --no-cache-dir
 
+RUN pip3 install networkx
 
 ################################ install byteps ################################
 ARG BPS_REMOTE=local
@@ -152,9 +153,10 @@ RUN cd $BYTEPS_PATH &&\
     BYTEPS_WITHOUT_PYTORCH=1 BYTEPS_WITHOUT_TENSORFLOW=1 python3 setup.py install &&\
     BYTEPS_WITHOUT_PYTORCH=1 BYTEPS_WITHOUT_TENSORFLOW=1 python3 setup.py bdist_wheel
 
-RUN wget https://gist.githubusercontent.com/eric-haibin-lin/e2911467307418ec64333a112bd09707/raw/50eb0c1b908b2d1289e00f99a717241c12e3117a/hvd_ssh.sh
-
 RUN pip3 install gluonnlp && python3 -c "import gluonnlp as nlp; nlp.model.get_model('bert_24_1024_16', dataset_name='book_corpus_wiki_en_uncased', pretrained=False); nlp.data.SQuAD('train', version='1.1'); nlp.data.SQuAD('dev', version='1.1');" && pip3 uninstall gluonnlp -y
+
+RUN python3 -c "import byteps.mxnet; print(byteps.mxnet)"
+RUN python3 -c "import horovod.mxnet; print(horovod.mxnet)"
 
 # Remove GCC pinning
 #RUN update-alternatives --remove gcc /usr/bin/gcc-4.9 && \
