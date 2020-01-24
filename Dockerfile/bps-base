@@ -91,11 +91,33 @@ RUN ln -sf /usr/local/cudnn/include/cudnn.h /usr/local/cuda/include/ && \
     ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so && \
     ln -sf /usr/local/cuda/lib64/libcuda.so /usr/local/cuda/lib64/libcuda.so.1
 
-# install mxnet
 RUN apt-get install  -y --allow-downgrades \
     libopenblas-dev \
     libcudnn7=7.4.1.5-1+cuda10.0 \
-    libcudnn7-dev=7.4.1.5-1+cuda10.0
+    libcudnn7-dev=7.4.1.5-1+cuda10.0 \
+    build-essential \
+    git ninja-build ccache libopenblas-dev \
+    libopencv-dev cmake
+
+RUN pip3 install cmake --user
+
+# install mxnet
+RUN cd /usr/local/ && \
+    git clone https://github.com/apache/incubator-mxnet --recursive
+
+WORKDIR /usr/local/incubator-mxnet 
+
+RUN rm -rf build && \
+    mkdir -p build && \
+    cd build && \
+    ~/.local/bin/cmake -GNinja  \
+    -DUSE_CUDA=OFF \
+    -DUSE_MKL_IF_AVAILABLE=OFF  \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_DIST_KVSTORE=ON ..
+
+RUN cd build && ninja
+RUN cd python && python3 setup.py develop --user
 
 RUN rm -rf /usr/local/cuda/lib64/libcuda.so && \
     rm -rf /usr/local/cuda/lib64/libcuda.so.1
