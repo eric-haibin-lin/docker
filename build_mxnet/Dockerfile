@@ -69,3 +69,6 @@ COPY MANIFEST.in /build
 COPY setup.py /build
 COPY buildmx.sh /build
 RUN chmod +x /build/buildmx.sh
+
+RUN apt-get install binutils-2.26
+ENV PATH /usr/lib/binutils-2.26/bin:${PATH}
