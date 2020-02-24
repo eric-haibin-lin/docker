@@ -10,7 +10,7 @@ RUN apt-get install -y python3-pip wget git autoconf libtool nvidia-modprobe \
     software-properties-common cmake openssh-server openssh-client numactl
 
 # install awscli
-RUN pip3 install awscli
+RUN pip3 install awscli h5py
 
 # setup cluster user and SSH access to container
 ENV USER cluster
@@ -73,7 +73,9 @@ RUN pip3 install --no-cache-dir gpustat portalocker torch==1.1.0
 
 # Install MXNet 
 # this pip wheel is built based on https://github.com/apache/incubator-mxnet/tree/benchmark COMMIT cc0c356
-ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191129-py2.py3-none-manylinux1_x86_64.whl
+#ENV MXNETVERSION https://lnyuan-mxnet.s3-us-west-2.amazonaws.com/mxnet-benchmark/mxnet_cu100-1.6.0b20191129-py2.py3-none-manylinux1_x86_64.whl
+ENV MXNETVERSION mxnet_cu100-1.6.0b20200224-py2.py3-none-manylinux1_x86_64.whl
+COPY $MXNETVERSION .
 RUN pip3 install $MXNETVERSION numpy==1.16
 
 # Install horovod
@@ -84,7 +86,7 @@ RUN HOROVOD_GPU_ALLREDUCE=NCCL \
     LD_LIBRARY_PATH=/usr/local/cuda/compat \
     pip3 install --no-cache-dir horovod
 
-RUN pip3 install h5py
+RUN git clone -b nvidia https://github.com/eric-haibin-lin/gluon-nlp && cd gluon-nlp && pip3 install . --user
 
 # Copy benchmarking scripts
 COPY benchmarks/* /opt/benchmarks/
