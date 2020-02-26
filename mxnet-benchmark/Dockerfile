@@ -84,11 +84,10 @@ RUN HOROVOD_GPU_ALLREDUCE=NCCL \
     HOROVOD_CUDA_HOME=/usr/local/cuda \
     HOROVOD_WITHOUT_TENSORFLOW=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITH_MXNET=1 \
     LD_LIBRARY_PATH=/usr/local/cuda/compat \
-    pip3 install --no-cache-dir horovod
+    pip3 install --no-cache-dir horovod==0.18.2
 
-#RUN git clone -b nvidia https://github.com/eric-haibin-lin/gluon-nlp && cd gluon-nlp && pip3 install . --user && pip3 list | grep gluon
-RUN pip3 install --no-cache-dir https://github.com/dmlc/gluon-nlp/tarball/v0.9.x && pip3 list | grep gluon
-# git clone -b nvidia https://github.com/eric-haibin-lin/gluon-nlp && cd gluon-nlp && pip3 install . --user && pip3 list | grep gluon
+RUN pip3 install --no-cache-dir https://github.com/dmlc/gluon-nlp/tarball/v0.9.x
+RUN pip3 list | grep gluon
 
 # Copy benchmarking scripts
 COPY benchmarks/* /opt/benchmarks/
