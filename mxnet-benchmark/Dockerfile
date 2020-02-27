@@ -39,21 +39,22 @@ RUN echo "export PATH=\"/usr/local/cuda/bin:/opt/amazon/openmpi/bin:\$PATH\"" > 
 WORKDIR /opt/build
 
 # Run EFA installer
-RUN wget -q https://s3-us-west-2.amazonaws.com/aws-efa-installer/aws-efa-installer-latest.tar.gz && \
-    tar -xzf aws-efa-installer-latest.tar.gz && \
+#curl -O https://s3-us-west-2.amazonaws.com/aws-efa-installer/aws-efa-installer-1.8.3.tar.gz
+RUN wget -q https://s3-us-west-2.amazonaws.com/aws-efa-installer/aws-efa-installer-1.5.1.tar.gz && \
+    tar -xzf aws-efa-installer-1.5.1.tar.gz && \
     cd aws-efa-installer && \
     ./efa_installer.sh -y --skip-kmod --skip-limit-conf --debug-packages
 
 ENV PATH="/usr/local/cuda/bin:/opt/amazon/openmpi/bin:$PATH"
 
 # Build NCCL library
-RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && /bin/bash && \
+RUN git clone -b v2.4.8-1 https://github.com/NVIDIA/nccl.git && cd nccl && /bin/bash && \
     make -j src.build CUDA_HOME=/usr/local/cuda && \
     make install
 
 # Build AWS OFI NCCL plugin
 RUN git clone https://github.com/aws/aws-ofi-nccl.git -b aws && \
-    cd aws-ofi-nccl && \
+    cd aws-ofi-nccl && git reset --hard 6b16033f9f81381e4ce59c139a256db8232f9646 && \
     ./autogen.sh && \
     ./configure --with-libfabric=/opt/amazon/efa --with-cuda=/usr/local/cuda \
         --with-nccl=/usr/local --with-mpi=/opt/amazon/openmpi && \

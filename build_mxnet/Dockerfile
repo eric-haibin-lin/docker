@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN add-apt-repository -y ppa:george-edison55/cmake-3.x
 
+RUN add-apt-repository -y ppa:deadsnakes/ppa
+
 # Install required libraries
 RUN apt-get update && apt-get install -y \
     vim \
@@ -17,10 +19,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     cmake \
-    python \
-    python-dev \
-    python3 \
-    python3-dev \
+    python3.6 \
+    python3.6-dev \
     build-essential \
     automake \
     libtool \
@@ -31,8 +31,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install pip
 RUN wget -q https://bootstrap.pypa.io/get-pip.py && \
-    python3 get-pip.py && \
-    python2 get-pip.py && \
+    python3.6 get-pip.py && \
     rm get-pip.py
 
 # Install pip packages
